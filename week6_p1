@@ -1,0 +1,149 @@
+#include <iostream>
+#include <list>
+using namespace std;
+
+class Node {
+public:
+	int value;
+	Node* parent;
+	list<Node*> childList;
+	int depth;
+
+	Node(Node* parent, int value, int depth) {
+		this->parent = parent;
+		this->value = value;
+		this->depth = depth;
+	}
+};
+
+class Tree {
+public:
+	Node* root;
+	list<Node*> nodeList;
+
+	Tree() {
+		root = new Node(nullptr, 1, 0);
+		nodeList.push_back(root);
+	}
+
+	Node* find(int x) {
+		for (auto n : nodeList) {
+			if (n->value == x) {
+				return n;
+			}
+		}
+		return nullptr;
+	}
+
+	void Insert(int x, int v) {
+		Node* parNode = find(x);
+
+		if (parNode == nullptr || find(v) != nullptr) {
+			cout << -1 << endl;
+			return;
+		}
+
+		Node* newNode = new Node(parNode, v, parNode->depth + 1);
+		parNode->childList.push_back(newNode);
+		nodeList.push_back(newNode);
+	}
+
+	void Erase(int v) {
+		Node* delNode = find(v);
+		if (delNode == nullptr || delNode == root) {
+			cout << -1 << endl;
+			return;
+		}
+
+		for (auto n : delNode->childList) {
+			n->parent = delNode->parent;
+			delNode->parent->childList.push_back(n);
+		}
+
+		delNode->parent->childList.remove(delNode);
+		nodeList.remove(delNode);
+	}
+
+	void Parent(int v) {
+		Node* tarNode = find(v);
+		if (tarNode == nullptr) {
+			cout << -1 << endl;
+			return;
+		}
+		if (tarNode == root) {
+			cout << 0 << endl;
+			return;
+		}
+		
+		cout << tarNode->parent->value << endl;
+	}
+
+	void Children(int v) {
+		Node* tarNode = find(v);
+		if (tarNode == nullptr) {
+			cout << -1 << endl;
+			return;
+		}
+		if (tarNode->childList.size() == 0) {
+			cout << 0 << endl;
+			return;
+		}
+
+		for (auto n : tarNode->childList) {
+			cout << n->value << " ";
+		}
+		cout << endl;
+	}
+
+	void Ancestor(int v) {
+		Node* tarNode = find(v);
+		if (tarNode == nullptr) {
+			cout << -1 << endl;
+			return;
+		}
+		if (tarNode == root) {
+			cout << 0 << endl;
+			return;
+		}
+		while (tarNode->parent != nullptr) {
+			tarNode = tarNode->parent;
+			cout << tarNode->value << " ";
+		}
+		cout << endl;
+	}
+};
+
+int main() {
+	int N;
+	cin >> N;
+	Tree t;
+	while (N--) {
+		string str;
+		cin >> str;
+		if (str == "Insert") {
+			int x, v;
+			cin >> x >> v;
+			t.Insert(x, v);
+		}
+		else if (str == "Delete") {
+			int v;
+			cin >> v;
+			t.Erase(v);
+		}
+		else if (str == "Parent") {
+			int v;
+			cin >> v;
+			t.Parent(v);
+		}
+		else if (str == "Children") {
+			int v;
+			cin >> v;
+			t.Children(v);
+		}
+		else if (str == "Ancestor") {
+			int v;
+			cin >> v;
+			t.Ancestor(v);
+		}
+	}
+}
