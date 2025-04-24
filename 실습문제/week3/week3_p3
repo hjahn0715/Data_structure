@@ -1,0 +1,117 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+	int value;
+	Node* next;
+
+	Node() {
+		value = 0;
+		next = nullptr;
+	}
+};
+
+class Stack {
+public:
+	Node* head;
+	Node* tail;
+	int size;
+
+	Stack() {
+		head = new Node();
+		tail = new Node();
+		head->next = tail;
+		size = 0;
+	}
+
+	void getSize() {
+		cout << size << endl;
+	}
+
+	void empty() {
+		if (size == 0) {
+			cout << 1 << endl;
+			return;
+		}
+		cout << 0 << endl;
+	}
+
+	void top() {
+		if (size == 0) {
+			cout << -1 << endl;
+			return;
+		}
+		cout << head->next->value << endl;
+	}
+
+	void push(int x) {
+		Node* newNode = new Node();
+		newNode->value = x;
+		newNode->next = head->next;
+		head->next = newNode;
+		size++;
+	}
+
+	void pop() {
+		if (size == 0) {
+			cout << -1 << endl;
+			return;
+		}
+		Node* delNode = head->next;
+		head->next = delNode->next;
+		size--;
+		cout << delNode->value << endl;
+		delete delNode;
+	}
+
+	void pop_all() {
+		if (size == 0) {
+			cout << -1 << endl;
+			return;
+		}
+		int sum = 0;
+		for (int i = 0; i < size; i++) {
+			sum += head->next->value;
+			Node* delNode = head->next;
+			head->next = delNode->next;
+			delete delNode;
+		}
+		cout << sum << endl;
+		size = 0;
+	}
+};
+
+int main() {
+	int T;
+	cin >> T;
+	while (T--) {
+		int Q;
+		cin >> Q;
+		Stack st;
+		while (Q--) {
+			string str;
+			cin >> str;
+			if (str == "size") {
+				st.getSize();
+			}
+			else if (str == "empty") {
+				st.empty();
+			}
+			else if (str == "top") {
+				st.top();
+			}
+			else if (str == "push") {
+				int x;
+				cin >> x;
+				st.push(x);
+			}
+			else if (str == "pop") {
+				st.pop();
+			}
+			else if (str == "pop_all") {
+				st.pop_all();
+			}
+		}
+	}
+}
