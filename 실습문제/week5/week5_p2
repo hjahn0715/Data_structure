@@ -1,0 +1,100 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+	int value;
+	Node* next;
+	Node* prev;
+
+
+	Node() {
+		next = nullptr;
+		prev = nullptr;
+		value = 0;
+	}
+};
+
+class DLL {
+public:
+	Node* head;
+	Node* tail;
+	int size;
+
+	DLL() {
+		head = new Node();
+		tail = new Node();
+		head->next = tail;
+		tail->prev = head;
+		size = 0;
+	}
+
+	void insert(int i) {
+		Node* newNode = new Node();
+		newNode->value = i;
+		tail->prev->next = newNode;
+		newNode->prev = tail->prev;
+		newNode->next = tail;
+		tail->prev = newNode;
+		size++;
+	}
+
+	void search(int idx, int x) {
+
+		Node* curNode = head->next;
+		for (int i = 0; i < idx; i++) {
+			curNode = curNode->next;
+		}
+		int cnt = 0;
+		if (idx % 2 == 0) {
+			curNode = curNode->prev;
+			for (int i = 0; i < x; i++) {
+				if (curNode->value % 2 == 0) {
+					cout << curNode->value << " ";
+					cnt++;
+					
+				}
+				curNode = curNode->prev;
+			}
+		}
+		else if (idx % 2 == 1) {
+			curNode = curNode->next;
+			for (int i = 0; i < x; i++) {
+				if (curNode->value % 2 == 1) {
+					cout << curNode->value << " ";
+					cnt++;
+					
+				}
+				curNode = curNode->next;
+			}
+		}
+		if (cnt == 0) {
+			cout << -1 << endl;
+		}
+		else {
+			cout << endl;
+		}
+	}
+};
+
+int main() {
+	int T;
+	cin >> T;
+	while (T--) {
+		DLL d;
+		int N, Q;
+		cin >> N >> Q;
+		
+		for (int i = 0; i < N; i++) {
+			int x;
+			cin >> x;
+			d.insert(x);
+		}
+
+		for (int i = 0; i < Q; i++) {
+			int x, y;
+			cin >> x >> y;
+			d.search(x, y);
+		}
+	}
+}
