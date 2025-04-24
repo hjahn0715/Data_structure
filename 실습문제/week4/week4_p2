@@ -1,0 +1,77 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+	int value;
+	Node* next;
+
+	Node() {
+		value = 0;
+		next = nullptr;
+	}
+};
+
+class Queue {
+public:
+	Node* head;
+	Node* tail;
+	int size;
+
+	Queue() {
+		head = new Node;
+		tail = head;
+		size = 0;
+	}
+
+	void enqueue(int x) {
+		Node* newNode = new Node();
+		newNode->value = x;
+		tail->next = newNode;
+		tail = newNode;
+		size++;
+	}
+
+	void dequeue() {
+		if (size == 0) {
+			return;
+		}
+		Node* delNode = head->next;
+		head->next = delNode->next;
+		delete delNode;
+		size--;
+	}
+
+	int top() {
+		if (size == 0) {
+			return -1;
+		}
+		return head->next->value;
+	}
+};
+
+int main() {
+	int T;
+	cin >> T;
+	while (T--) {
+		Queue q;
+		int N;
+		cin >> N;
+		for (int i = 1; i <= N; i++) {
+			q.enqueue(i);
+		}
+		int round = N - 1;
+		while (round--) {
+			int bomb;
+			cin >> bomb;
+			for (int i = 0; i < bomb; i++) {
+				int a = q.top();
+				q.dequeue();
+				q.enqueue(a);
+			}
+			q.dequeue();
+			
+		}
+		cout << q.top() << endl;
+	}
+}
