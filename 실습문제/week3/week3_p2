@@ -1,0 +1,70 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+	string value;
+	Node* next;
+
+	Node() {
+		next = nullptr;
+	}
+};
+
+class Stack {
+public:
+	Node* head;
+	Node* tail;
+	int size;
+	int result;
+
+	Stack() {
+		head = new Node();
+		tail = new Node();
+		head->next = tail;
+		size = 0;
+		result = 0;
+	}
+
+	void push(char x) {
+		Node* newNode = new Node();
+		newNode->value = x;
+		newNode->next = head->next;
+		head->next = newNode;
+		size++;
+	}
+
+	void pop() {
+		if (size == 0) {
+			result++;
+			return;
+		}
+		Node* delNode = head->next;
+		head->next = delNode->next;
+		delete delNode;
+		size--;
+	}
+
+	void answer() {
+		cout << size + result << endl;
+	}
+};
+
+int main() {
+	int Q;
+	cin >> Q;
+	while (Q--) {
+		string str;
+		cin >> str;
+		Stack st;
+		for (int i = 0; i < str.length(); i++) {
+			if (str[i] == '(') {
+				st.push(str[i]);
+			}
+			else {
+				st.pop();
+			}
+		}
+		st.answer();
+	}
+}
