@@ -1,0 +1,92 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+	int value;
+	Node* next;
+
+	Node() {
+		value = 0;
+		next = nullptr;
+	}
+};
+
+class Queue {
+public:
+	Node* head;
+	Node* tail;
+	int size;
+
+	Queue() {
+		head = new Node();
+		tail = head;
+		size = 0;
+	}
+
+	void push(int x) {
+		Node* newNode = new Node();
+		newNode->value = x;
+		tail->next = newNode;
+		newNode->next = tail;
+		tail = newNode;
+		size++;
+	}
+
+	void pop() {
+		if (size == 0) {
+			cout << -1 << endl;
+			return;
+		}
+		Node* delNode = head->next;
+		head->next = delNode->next;
+		delete delNode;
+		size--;
+	}
+
+	
+};
+
+int main() {
+	int T;
+	cin >> T;
+	while (T--) {
+		Queue q;
+		Queue a;
+		int N;
+		cin >> N;
+		for (int i = 0; i < N; i++) {
+			q.push(i + 1);
+		}
+		int p = N - 1;
+		while (p--) {
+			int x;
+			cin >> x;
+			for (int i = 0; i < x; i++) {
+				int tmp = q.head->next->value;
+				q.pop();
+				q.push(tmp);
+			}
+			a.push(q.head->next->value);
+			q.pop();
+		}
+		int target;
+		cin >> target;
+
+		Node* curNode = a.head->next;
+
+		int cnt = 0;
+
+		for (int i = 0; i < a.size; i++) {
+			if (curNode->value == target) {
+				cout << i + 1 << endl;
+				cnt++;
+				break;
+			}
+			curNode = curNode->next;
+		}
+		if (cnt == 0) {
+			cout << -1 << endl;
+		}
+	}
+}
