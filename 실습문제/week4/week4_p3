@@ -1,0 +1,114 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+	int value;
+	Node* next;
+
+	Node() {
+		value = 0;
+		next = nullptr;
+	}
+};
+
+class Queue {
+public:
+	Node* head;
+	Node* tail;
+	int size;
+
+	Queue() {
+		head = new Node();
+		tail = head;
+		size = 0;
+	}
+
+	void getSize() {
+		cout << size << endl;
+	}
+
+	void empty() {
+		if (size == 0) {
+			cout << 1 << endl;
+			return;
+		}
+		cout << 0 << endl;
+	}
+
+	void front() {
+		if (size == 0) {
+			cout << -1 << endl;
+			return;
+		}
+		cout << head->next->value << endl;
+	}
+
+	void push(int x) {
+		Node* newNode = new Node();
+		newNode->value = x;
+		tail->next = newNode;
+		newNode->next = tail;
+		tail = newNode;
+		size++;
+	}
+
+	void pop() {
+		if (size == 0) {
+			cout << -1 << endl;
+			return;
+		}
+		cout << head->next->value << endl;
+		Node* delNode = head->next;
+		head->next = delNode->next;
+		delete delNode;
+		size--;
+	}
+
+	void print_all() {
+		if (size == 0) {
+			cout << -1 << endl;
+			return;
+		}
+		Node* curNode = head->next;
+		for (int i = 0; i < size; i++) {
+			cout << curNode->value << " ";
+			curNode = curNode->next;
+		}
+		cout << endl;
+	}
+};
+
+int main() {
+	int T;
+	cin >> T;
+	while (T--) {
+		Queue q;
+		int Q;
+		cin >> Q;
+		while (Q--) {
+			string str;
+			cin >> str;
+			if (str == "size") {
+				q.getSize();
+			}
+			else if (str == "empty") {
+				q.empty();
+			}
+			else if (str == "front") {
+				q.front();
+			}
+			else if (str == "push") {
+				int x;
+				cin >> x;
+				q.push(x);
+			}
+			else if (str == "pop") {
+				q.pop();
+			}
+			else if (str == "print_all") {
+				q.print_all();
+			}
+		}
+	}
+}
