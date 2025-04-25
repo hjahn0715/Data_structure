@@ -1,0 +1,92 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+	int value;
+	Node* next;
+	Node* prev;
+
+	Node() {
+		value = 0;
+		next = nullptr;
+		prev = nullptr;
+	}
+};
+
+class DLL {
+public:
+	Node* header;
+	Node* trailer;
+	int size;
+
+	DLL() {
+		header = new Node();
+		trailer = new Node();
+		header->next = trailer;
+		trailer->prev = header;
+		size = 0;
+	}
+
+	void insertBack(int x) {
+		Node* newNode = new Node();
+		newNode->value = x;
+		trailer->prev->next = newNode;
+		newNode->prev = trailer->prev;
+		newNode->next = trailer;
+		trailer->prev = newNode;
+		size++;
+	}
+
+	void search(int idx, int x) {
+		Node* curNode = header->next;
+		for (int i = 0; i < idx; i++) {
+			curNode = curNode->next;
+		}
+		int cnt = 0;
+		if (idx % 2 == 0) {
+			curNode = curNode->next;
+			for (int i = 0; i < x; i++) {
+				if (curNode->value % 2 == 0) {
+					cout << curNode->value << " ";
+					cnt++;
+				}
+				curNode = curNode->next;
+			}
+		}
+		else {
+			curNode = curNode->prev;
+			for (int i = 0; i < x; i++) {
+				if (curNode->value % 2 == 1) {
+					cout << curNode->value << " ";
+					cnt++;
+				}
+				curNode = curNode->prev;
+			}
+		}
+		if (cnt == 0) {
+			cout << -1;
+		}
+		cout << endl;
+	}
+};
+
+int main() {
+	int T;
+	cin >> T;
+	while (T--) {
+		int N, Q;
+		cin >> N >> Q;
+		DLL d;
+		for (int i = 0; i < N; i++) {
+			int x;
+			cin >> x;
+			d.insertBack(x);
+		}
+		while (Q--) {
+			int a, b;
+			cin >> a >> b;
+			d.search(a, b);
+		}
+	}
+}
