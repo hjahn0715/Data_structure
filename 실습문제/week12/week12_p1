@@ -1,0 +1,132 @@
+#include<iostream>
+using namespace std;
+
+#define NO 0
+#define IS 1
+#define AV 2
+
+class Entry {
+public:
+	int key;
+	string value;
+	int valid;
+
+	Entry() {
+		key = 0;
+		value = " ";
+		valid = NO;
+	}
+
+	Entry(int key, string value) {
+		this->key = key;
+		this->value = value;
+		valid = IS;
+	}
+};
+
+class HashTable {
+public:
+	Entry* hashTable;
+	int capa;
+	int size;
+	int cnt = 0;
+
+	HashTable(int capa) {
+		this->capa = capa;
+		hashTable = new Entry[capa];
+	}
+
+	int hashF(int k) {
+		return k % capa;
+	}
+
+	int getSize() {
+		return size;
+	}
+
+	void insert(int k, string s) {
+		int idx = hashF(k);
+		int probing = 1;
+		cnt++;
+		while (hashTable[idx].valid == IS && probing <= capa) {
+			if (hashTable[idx].key == k) {
+				idx = -1;
+				cout << hashF(k) << " " << idx << "\n";
+				return;
+			}
+			(idx++)%capa;
+			probing++;
+			cnt++;
+		}
+		if (probing > capa) {
+			idx = -1;
+			cout << hashF(k) << " " << idx << "\n";
+			return;
+		}
+		cout << hashF(k) << " " << idx << "\n";
+		hashTable[idx] = Entry(k, s);
+		size++;
+	}
+
+	void erase(int k) {
+		int idx = hashF(k);
+		int probing = 1;
+
+		while (hashTable[idx].valid != NO && probing <= capa) {
+			if (hashTable[idx].valid == IS && hashTable[idx].key == k) {
+				cout << hashTable[idx].value << "\n";
+				hashTable[idx].valid = AV;
+				size--;
+				return;
+			}
+			idx++;
+			probing++;
+		}
+		cout << -1 << "\n";
+	}
+
+	void find(int k) {
+		int idx = hashF(k);
+		int probing = 1;
+		while (hashTable[idx].valid != NO && probing <= capa) {
+			if (hashTable[idx].valid == IS && hashTable[idx].key == k) {
+				cout << hashTable[idx].value << "\n";
+				return;
+			}
+			idx++;
+			probing++;
+		}
+		cout << -1 << "\n";
+	}
+};
+
+int main() {
+	int T, N;
+	cin >> T >> N;
+	HashTable h = HashTable(N);
+	while (T--) {
+		string str;
+		cin >> str;
+		if (str == "size") {
+			cout << h.getSize() << "\n";
+		}
+		else if (str == "insert") {
+			int k;
+			string s;
+			cin >> k >> s;
+			h.insert(k, s);
+		}
+		else if (str == "erase") {
+			int k;
+			cin >> k;
+			h.erase(k);
+		}
+		else if (str == "find") {
+			int k;
+			cin >> k;
+			h.find(k);
+		}
+	}
+	cout << h.cnt << "\n";
+}
+
