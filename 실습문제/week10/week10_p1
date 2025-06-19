@@ -1,0 +1,84 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+class Heap {
+public:
+	vector<int> v;
+	int broker = 0;
+	int num_check = 0;
+
+	void swap(int a, int b) {
+		v[0] = v[a];
+		v[a] = v[b];
+		v[b] = v[0];
+	}
+
+	void downHeap(int idx) {
+		broker = 0;
+		int max = idx;
+		int left = idx * 2;
+		int right = idx * 2 + 1;
+		if (left < size() && v[left] < v[max]) {
+			num_check = left;
+			broker++;
+			return;
+		}
+		if (right < size() && v[right] < v[max]) {
+			num_check = right;
+			broker++;
+			return;
+		}
+	    //    if (max != idx) {
+	      //  	swap(max, idx);
+	        //	downHeap(max);
+	        //}
+	}
+
+	void upHeap(int idx) {
+		if (idx == 1) {
+			return;
+		}
+		int parIdx = idx / 2;
+		if (v[parIdx] > v[idx]) {
+			swap(parIdx, idx);
+			upHeap(parIdx);
+		}
+	}
+
+	void push(int x) {
+		v.push_back(x);
+		//upHeap(v.size());
+	}
+
+	int size() {
+		return v.size();
+	}
+};
+
+int main() {
+	int T;
+	cin >> T;
+	while (T--) {
+		int N;
+		cin >> N;
+		Heap h;
+		int M = N;
+		while (M--) {
+			int a;
+			cin >> a;
+			h.push(a);
+		}
+		for (int i = 1; i < N / 2+1; i++) {
+			h.downHeap(i);
+			if (h.broker == 1) {
+				cout << "(" << i << ", " << h.num_check << ")\n";
+				break;
+			}
+		}
+		if (h.broker != 1) {
+			cout << "(-1, -1)\n";
+		}
+		
+	}
+}
