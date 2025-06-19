@@ -1,0 +1,222 @@
+#include<iostream>
+using namespace std;
+
+class Node {
+public:
+	int value;
+	int key;
+	Node* left;
+	Node* right;
+	Node* parent;
+
+	Node(int key, int value) {
+		this->key = key;
+		this->value = value;
+		left = nullptr;
+		right = nullptr;
+		parent = nullptr;
+	}
+};
+
+class BST {
+public:
+	int size = 0;
+	Node* root = nullptr;
+
+	Node* search(int x) {
+		Node* curNode = root;
+		while (curNode != nullptr) {
+			if (curNode->key == x) {
+				return curNode;
+			}
+			else if (curNode->key > x) {
+				curNode = curNode->left;
+			}
+			else if (curNode->key < x) {
+				curNode = curNode->right;
+			}
+		}
+		return nullptr;
+	}
+
+	void insert(int k, int v) {
+		if (search(k) != nullptr) {
+			return;
+		}
+		Node* newNode = new Node(k, v);
+		size++;
+		if (root == nullptr) {
+			root = newNode;
+			return;
+		}
+
+		Node* curNode = root;
+		Node* parNode = curNode->parent;
+
+		while (curNode != nullptr) {
+			parNode = curNode;
+			if (k < curNode->key) {
+				curNode = curNode->left;
+			}
+			else if (k > curNode->key) {
+				curNode = curNode->right;
+			}
+		}
+		newNode->parent = parNode;
+		if (k < parNode->key) {
+			parNode->left = newNode;
+		}
+		else {
+			parNode->right = newNode;
+		}
+	}
+
+	void erase(int k) {
+		if (search(k) == nullptr) {
+			return;
+		}
+		Node* delNode = search(k);
+		Node* parNode = delNode->parent;
+		Node* childNode;
+		if (delNode->left == nullptr) {
+			if (delNode->right == nullptr) {
+				childNode = nullptr;
+			}
+			else {
+				childNode = delNode->right;
+			}
+		}
+		else {
+			if (delNode->right == nullptr) {
+				childNode = delNode->left;
+			}
+			else {
+				childNode = delNode->right;
+				while (childNode->left != nullptr) {
+					childNode = childNode->left;
+				}
+				delNode->key = childNode->key;
+				delNode->value = childNode->value;
+				delNode = childNode;
+				parNode = delNode->parent;
+				childNode = delNode->right;
+			}
+		}
+
+		if (parNode == nullptr) {
+			root = childNode;
+			if (root != nullptr) {
+				root->parent = nullptr;
+			}
+		}
+		else if (delNode == parNode->left) {
+			parNode->left = childNode;
+			if (childNode != nullptr) {
+				childNode->parent = parNode;
+			}
+		}
+		else if (delNode == parNode->right) {
+			parNode->right = childNode;
+			if (childNode != nullptr) {
+				childNode->parent = parNode;
+			}
+		}
+		delete delNode;
+	}
+
+	int findHeight(int k) {
+		Node* curNode = search(k);
+		int left_height = 0;
+		int right_height = 0;
+		if (curNode->left != nullptr) {
+			left_height = findHeight(curNode->left->key);
+
+		}
+		if (curNode->right != nullptr) {
+			right_height = findHeight(curNode->right->key);
+
+		}
+		return 1+max(left_height, right_height);
+	}
+
+	void Height(int k) {
+		if (search(k) == nullptr) {
+			cout << -1 << "\n";
+			return;
+		}
+		cout << findHeight(k)-1 << "\n";
+	}
+
+	Node* successor(Node* node) {
+		if (node == nullptr) {
+			return nullptr;
+		}
+		if (node->right != nullptr) {
+			Node* curNode = node->right;
+			while (curNode->left != nullptr) {
+				curNode = curNode->left;
+			}
+			return curNode;
+		}
+		Node* curNode = node;
+		Node* parNode = curNode->parent;
+		while (parNode != nullptr && curNode == parNode->right) {
+			curNode = curNode->parent;
+			parNode = curNode->parent;
+		}
+		return parNode;
+	}
+
+	void Next(int k, int s) {
+		Node* tarNode = search(k);
+		for (int i = 0; i < s; i++) {
+			tarNode = successor(tarNode);
+		}
+		if (tarNode == nullptr) {
+			cout << -2 << "\n";
+		}
+		else {
+			cout << tarNode->key << "\n";
+		}
+	}
+};
+
+int main() {
+	int N;
+	cin >> N;
+	BST b;
+	while (N--) {
+		string str;
+		cin >> str;
+		if (str == "Insert") {
+			int k, v;
+			cin >> k >> v;
+			b.insert(k, v);
+		}
+		else if (str == "Find") {
+			int k;
+			cin >> k;
+			if (b.search(k) == nullptr) {
+				cout << 0 << "\n";
+			}
+			else {
+				cout << b.search(k)->value << "\n";
+			}
+		}
+		else if (str == "Erase") {
+			int k;
+			cin >> k;
+			b.erase(k);
+		}
+		else if (str == "Height") {
+			int k;
+			cin >> k;
+			b.Height(k);
+		}
+		else if (str == "Next") {
+			int k, s;
+			cin >> k >> s;
+			b.Next(k, s);
+		}
+	}
+}
