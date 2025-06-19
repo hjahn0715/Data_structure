@@ -1,0 +1,132 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+class PQ {
+public:
+	vector<int> v;
+
+	void Push(int value) {
+		vector<int>::iterator i;
+		/*for (i = v.begin(); i != v.end(); i++) {
+			if (value < *i) {
+				v.insert(i, value);
+				return;
+			}
+		}*/
+		v.push_back(value);
+	}
+
+	void Top() {
+		if (v.size() == 0) {
+			cout << -1 << endl;
+			return;
+		}
+		//cout << v.back() << "\n";
+		vector<int>::iterator i;
+		int max = v[0];
+		for (i = v.begin(); i != v.end(); i++) {
+			if (*i > max) {
+				max = *i;
+			}
+		}
+		cout << max << "\n";
+	}
+
+	void Pop() {
+		if (v.size() == 0) {
+			cout << "empty\n";
+			return;
+		}
+		//v.pop_back();
+		vector<int>::iterator i;
+		int max = v[0];
+		for (i = v.begin(); i != v.end(); i++) {
+			if (*i > max) {
+				max = *i;
+			}
+		}
+		for (i = v.begin(); i != v.end(); i++) {
+			if (*i == max) {
+				v.erase(i);
+				return;
+			}
+		}
+
+	}
+
+	void Print_avg() {
+		if (v.size() == 0) {
+			cout << 0 << "\n";
+			return;
+		}
+		int sum = 0;
+		vector<int>::iterator i;
+		for (i = v.begin(); i != v.end(); i++) {
+			sum += *i;
+		}
+		cout << (int)sum / v.size() << "\n";
+	}
+
+	void Print_all() {
+		if (v.size() == 0) {
+			cout << "empty\n";
+			return;
+		}
+		vector<int>::iterator i;
+		for (i = v.begin(); i != v.end(); i++) {
+			cout << *i << " ";
+		}
+		cout << "\n";
+	}
+
+	void Sum_low() {
+		if (v.size() == 0) {
+			cout << 0 << "\n";
+			return;
+		}
+		int sum = 0;
+		vector<int>::iterator i;
+		for (i = v.begin(); i != v.end(); i++) {
+			sum += *i;
+		}
+		int avg = (int)sum / v.size();
+		int sum_low = 0;
+		for (i = v.begin(); i != v.end(); i++) {
+			if (*i < avg) {
+				sum_low += *i;
+			}
+		}
+		cout << sum_low << "\n";
+	}
+};
+
+int main() {
+	int N;
+	cin >> N;
+	PQ q;
+	while (N--) {
+		string str;
+		cin >> str;
+		if (str == "Push") {
+			int v;
+			cin >> v;
+			q.Push(v);
+		}
+		else if (str == "Top") {
+			q.Top();
+		}
+		else if (str == "Pop") {
+			q.Pop();
+		}
+		else if (str == "Print_avg") {
+			q.Print_avg();
+		}
+		else if (str == "Print_all") {
+			q.Print_all();
+		}
+		else if (str == "Sum_low") {
+			q.Sum_low();
+		}
+	}
+}
